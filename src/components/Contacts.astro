@@ -1,0 +1,130 @@
+---
+import { CLUB, DIRECTIONS } from '../data/site';
+---
+<section id="contacts" class="tatami-section">
+  <div class="tatami-container">
+    <div class="section-header">
+      <h2 class="tatami-section-title">Приходите в «Татами»</h2>
+      <p class="section-note">Жуковский, Гагарина, 85. Запись и вопросы — в Telegram администратора.</p>
+    </div>
+    <div class="contacts-layout">
+      <div>
+        <dl class="contact-details">
+          <div><dt>Адрес</dt><dd>{CLUB.addressShort}<small>Московская область</small></dd></div>
+          <div><dt>Администратор</dt><dd><a href={CLUB.telegramAdmin} target="_blank" rel="noopener noreferrer">Написать в Telegram</a></dd></div>
+        </dl>
+        <div class="map-panel">
+          <div id="map-container" class="map-content">
+            <p class="text-lg font-medium">Как нас найти</p>
+            <p class="mt-2 text-sm text-tatami-secondary">{CLUB.addressFull}</p>
+            <div class="mt-6 flex flex-wrap gap-3">
+              <a href={CLUB.mapUrl} target="_blank" rel="noopener noreferrer" class="btn-secondary">Открыть Яндекс Карты</a>
+              <button type="button" id="load-map-btn" data-embed-url={CLUB.mapEmbedUrl} class="btn-secondary">Показать на сайте</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="signup" class="signup-panel">
+        <h3 class="text-2xl font-medium">Запись на пробное занятие</h3>
+        <p class="mt-4 text-tatami-secondary">Первое занятие бесплатно. Оставьте имя и номер — подготовим заявку администратору.</p>
+        <noscript><p class="mt-6"><a href={CLUB.telegramAdmin} target="_blank" rel="noopener noreferrer" class="btn-primary">Записаться в Telegram</a></p></noscript>
+        <form id="tatami-signup-form" data-telegram={CLUB.telegramAdmin} action={CLUB.telegramAdmin} target="_blank" rel="noopener noreferrer" hidden>
+          <div class="form-fields">
+            <div><label for="signup-direction">Направление</label><select id="signup-direction" name="direction">{DIRECTIONS.map((direction) => <option value={direction.id}>{direction.title}</option>)}</select></div>
+            <div><label for="signup-name">Ваше имя</label><input id="signup-name" name="name" type="text" required minlength="2" maxlength="80" autocomplete="name" /></div>
+            <div><label for="signup-phone">Телефон</label><input id="signup-phone" name="phone" type="tel" required maxlength="30" autocomplete="tel" inputmode="tel" placeholder="+7 (999) 123-45-67" /></div>
+          </div>
+          <button type="submit" class="btn-primary mt-6 w-full">Продолжить в Telegram</button>
+          <p class="mt-4 text-sm text-tatami-secondary">Откроется чат администратора с вашей заявкой. Проверьте её и нажмите «Отправить» в Telegram. Группу и время обсудим там.</p>
+          <div id="signup-status" role="status" aria-live="polite" class="signup-status" hidden>
+            <p id="signup-message"></p>
+            <a id="signup-telegram-link" class="text-link mt-3 inline-block" target="_blank" rel="noopener noreferrer" hidden>Открыть заявку в Telegram</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+  // Load embedded Yandex Map iframe strictly upon user click
+  const loadMapBtn = document.getElementById('load-map-btn') as HTMLButtonElement | null;
+  const mapContainer = document.getElementById('map-container');
+  if (loadMapBtn && mapContainer) {
+    loadMapBtn.addEventListener('click', () => {
+      const embedUrl = loadMapBtn.dataset.embedUrl;
+      if (!embedUrl) return;
+      const iframe = document.createElement('iframe');
+      iframe.src = embedUrl;
+      iframe.title = 'Расположение спортивного клуба Татами на Яндекс Картах — ул. Гагарина, 85, Жуковский';
+      iframe.className = 'h-[300px] w-full border-0';
+      iframe.referrerPolicy = 'no-referrer';
+      iframe.allowFullscreen = true;
+      mapContainer.className = 'bg-zinc-900';
+      mapContainer.replaceChildren(iframe);
+    });
+  }
+
+  const form = document.getElementById('tatami-signup-form') as HTMLFormElement;
+  const directionSelect = document.getElementById('signup-direction') as HTMLSelectElement;
+  const nameInput = document.getElementById('signup-name') as HTMLInputElement;
+  const phoneInput = document.getElementById('signup-phone') as HTMLInputElement;
+  const statusBox = document.getElementById('signup-status')!;
+  const message = document.getElementById('signup-message')!;
+  const telegramLink = document.getElementById('signup-telegram-link') as HTMLAnchorElement;
+
+  const clearStatus = () => {
+    statusBox.hidden = true;
+    telegramLink.hidden = true;
+    telegramLink.removeAttribute('href');
+  };
+  form.addEventListener('input', clearStatus);
+  form.addEventListener('change', clearStatus);
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    clearStatus();
+    const name = nameInput.value.trim().replace(/[\r\n]+/g, ' ');
+    const phone = phoneInput.value.trim();
+    const digits = phone.replace(/\D/g, '');
+    if (name.length < 2) {
+      statusBox.hidden = false;
+      message.textContent = 'Укажите имя — не менее двух символов.';
+      nameInput.focus();
+      return;
+    }
+    if (!/^\+?[\d\s()-]+$/.test(phone) || digits.length < 10 || digits.length > 15) {
+      statusBox.hidden = false;
+      message.textContent = 'Проверьте номер телефона: от 10 до 15 цифр.';
+      phoneInput.focus();
+      return;
+    }
+    const direction = directionSelect.options[directionSelect.selectedIndex].label;
+    const draft = `Здравствуйте! Хочу записаться на пробное занятие.\nНаправление: ${direction}\nИмя: ${name}\nТелефон: ${phone}`;
+    const url = new URL(form.dataset.telegram!);
+    url.searchParams.set('text', draft);
+    telegramLink.href = url.href;
+    telegramLink.hidden = false;
+    statusBox.hidden = false;
+    message.textContent = 'Заявка подготовлена, но ещё не отправлена. Если чат не открылся, нажмите на ссылку ниже.';
+    window.open(url.href, '_blank', 'noopener,noreferrer');
+  });
+  // Keep personal fields unavailable until the handler prevents a native GET submission.
+  form.hidden = false;
+</script>
+<style>
+  [hidden] { display: none !important; }
+  .contacts-layout { display: grid; gap: 48px; }
+  .contact-details > div { padding-block: 20px; border-top: 1px solid var(--hairline); }
+  .contact-details dt { font-size: 14px; color: var(--secondary); }
+  .contact-details dd { margin-top: 8px; font-size: 20px; }
+  .contact-details small { display: block; margin-top: 8px; font-size: 14px; color: var(--secondary); }
+  .contact-details a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .map-panel { overflow: hidden; margin-top: 32px; border: 1px solid var(--hairline); border-radius: 12px; }
+  .map-content { min-height: 240px; padding: 24px; background: var(--surface); }
+  .signup-panel { padding-top: 24px; border-top: 1px solid var(--hairline); }
+  .form-fields { display: grid; gap: 24px; margin-top: 24px; }
+  label { display: block; font-size: 14px; color: var(--text); }
+  input, select { width: 100%; min-height: 48px; margin-top: 8px; padding: 12px; border: 1px solid var(--hairline); border-radius: 8px; background: var(--surface); color: var(--text); font-size: 16px; line-height: 24px; }
+  input::placeholder { color: var(--muted); }
+  .signup-status { margin-top: 16px; padding: 16px; border: 1px solid var(--hairline); border-radius: 8px; font-size: 14px; }
+  @media (min-width: 1024px) { .contacts-layout { grid-template-columns: 1fr 1fr; gap: 96px; } }
+</style>

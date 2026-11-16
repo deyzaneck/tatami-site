@@ -1,0 +1,68 @@
+---
+import { Image } from 'astro:assets';
+import { CLUB, DIRECTIONS } from '../data/site';
+import judoImage from '../assets/direction-judo-generated.webp';
+import muayThaiImage from '../assets/direction-muay-thai-generated.webp';
+import stretchingImage from '../assets/direction-stretching-generated.webp';
+
+const photos = {
+  judo: { src: judoImage, alt: 'Два взрослых дзюдоиста отрабатывают бросок на красном татами: спортсмен в синем кимоно в воздухе', caption: 'Иллюстрация направления' },
+  'muay-thai': { src: muayThaiImage, alt: 'Спортсмен отрабатывает удар коленом по лапам с тренером', caption: 'Иллюстрация направления' },
+  stretching: { src: stretchingImage, alt: 'Спортсменка выполняет растяжку на татами', caption: 'Иллюстрация направления' },
+};
+---
+<section id="directions" class="tatami-section">
+  <div class="tatami-container">
+    <div class="section-header">
+      <h2 class="tatami-section-title">Выберите своё направление</h2>
+      <p class="section-note">Начните с бесплатного пробного занятия. Группу и удобное время подберём в Telegram.</p>
+    </div>
+    <div class="directions-grid">
+      {DIRECTIONS.map((direction) => {
+        const photo = photos[direction.id];
+        return (
+          <article id={`direction-${direction.id}`} class="direction-card">
+            <figure>
+              <Image src={photo.src} alt={photo.alt} width={960} widths={[320, 480, 640, 960]} sizes="(min-width: 1024px) 31vw, (min-width: 640px) 46vw, 100vw" format="webp" quality={85} loading="lazy" decoding="async" class="direction-image" />
+              <figcaption>{photo.caption}</figcaption>
+            </figure>
+            <div class="direction-content">
+              <h3>{direction.title}</h3>
+              <p class="direction-subtitle">{direction.subtitle}</p>
+              <ul>{direction.highlights.map((highlight) => <li>{highlight}</li>)}</ul>
+              <a href="#signup" data-select-direction={direction.id} class="btn-secondary">Выбрать {direction.title.toLowerCase()}</a>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+    <div id="schedule" class="schedule-note">
+      <div>
+        <h3>Не знаете, с чего начать?</h3>
+        <p>Расскажите администратору о возрасте, подготовке и целях. Вместе выберем направление, группу и время.</p>
+      </div>
+      <a href={CLUB.telegramAdmin} target="_blank" rel="noopener noreferrer" class="text-link">Помочь с выбором в Telegram</a>
+    </div>
+  </div>
+</section>
+<style>
+  .directions-grid { display: grid; gap: 24px; }
+  .direction-card { min-width: 0; display: flex; flex-direction: column; overflow: hidden; background: var(--surface); border: 1px solid var(--hairline); border-radius: 12px; }
+  .direction-image { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; object-position: center 35%; }
+  figcaption { padding: 12px 24px 0; color: var(--muted); font-size: 12px; }
+  .direction-content { display: flex; flex: 1; flex-direction: column; align-items: start; padding: 20px 24px 24px; }
+  .direction-content h3 { font-size: 28px; line-height: 1.2; font-weight: 500; }
+  .direction-subtitle { margin-top: 8px; color: var(--secondary); font-size: 16px; line-height: 24px; }
+  ul { margin-block: 24px 32px; padding-left: 20px; list-style: disc; color: var(--secondary); }
+  li + li { margin-top: 12px; }
+  .direction-content > a { margin-top: auto; width: 100%; }
+  .schedule-note { display: grid; gap: 24px; margin-top: 32px; padding-top: 32px; border-top: 1px solid var(--hairline); }
+  .schedule-note h3 { font-size: 24px; font-weight: 500; line-height: 32px; }
+  .schedule-note p { max-width: 64ch; margin-top: 8px; color: var(--secondary); }
+  .schedule-note > a { justify-self: start; align-self: center; padding-block: 12px; }
+  @media (min-width: 640px) { .directions-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 1024px) {
+    .directions-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .schedule-note { grid-template-columns: 1fr auto; gap: 48px; }
+  }
+</style>

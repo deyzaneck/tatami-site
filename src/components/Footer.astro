@@ -1,0 +1,30 @@
+---
+import headerLogo from '../assets/tatami-header-logo.png';
+import SocialLinks from './SocialLinks.astro';
+import { CLUB, NAV_ITEMS } from '../data/site';
+---
+<footer class="site-footer">
+  <div class="tatami-container">
+    <div class="footer-main">
+      <a href="#hero" class="w-fit" aria-label="Татами спортивный клуб — наверх страницы"><img src={headerLogo.src} width={headerLogo.width} height={headerLogo.height} alt="Татами — спортивный клуб" class="footer-logo" /></a>
+      <nav aria-label="Навигация в подвале">{NAV_ITEMS.map((item) => <a href={item.href}>{item.label}</a>)}</nav>
+    </div>
+    <div class="footer-contact">
+      <a href={CLUB.mapUrl} target="_blank" rel="noopener noreferrer">{CLUB.addressFull}</a>
+      <a href={CLUB.telegramAdmin} target="_blank" rel="noopener noreferrer">Администратор в Telegram</a>
+      <SocialLinks variant="pill" />
+    </div>
+    <p class="footer-copyright">© {new Date().getFullYear()} {CLUB.name}, {CLUB.city}</p>
+  </div>
+</footer>
+<style>
+  .site-footer { padding-block: 48px; background: var(--page); }
+  .footer-main { display: flex; flex-direction: column; gap: 32px; }
+  .footer-logo { display: block; width: 176px; height: auto; }
+  nav { display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: center; }
+  nav a { padding-block: 8px; font-size: 14px; }
+  .footer-contact { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 32px; margin-top: 32px; padding-top: 32px; border-top: 1px solid var(--hairline); font-size: 14px; color: var(--secondary); }
+  a:hover { color: var(--text); }
+  .footer-copyright { margin-top: 32px; color: var(--muted); font-size: 12px; }
+  @media (min-width: 768px) { .footer-main { flex-direction: row; justify-content: space-between; } }
+</style>

@@ -1,0 +1,108 @@
+---
+import { REVIEWS } from '../data/site';
+---
+<section id="reviews" class="tatami-section">
+  <div class="tatami-container">
+    <div class="section-header">
+      <h2 class="tatami-section-title">Что говорят<br />гости и родители</h2>
+      <p class="section-note">Отзывы о «Татами» с Яндекс Карт</p>
+    </div>
+    <div id="reviews-carousel" role="region" aria-roledescription="carousel" aria-label="Отзывы гостей спортивного клуба Татами">
+      <div class="reviews-window">
+        <div id="reviews-track">
+          {REVIEWS.map((review) => (
+            <div class="review-slide" data-review-slide>
+              <article>
+                <p class="review-source">Яндекс Карты {review.date && <time>{review.date}</time>}</p>
+                <blockquote><p data-review-quote data-excerpt={review.excerpt} data-full={review.text}>{review.excerpt}</p></blockquote>
+                {review.excerpt !== review.text && <button type="button" data-review-expand aria-expanded="false" class="text-link review-expand">Читать полностью</button>}
+              </article>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div class="review-controls">
+        <div id="reviews-dots" role="group" aria-label="Выбор отзыва">
+          {REVIEWS.map((_, idx) => <button type="button" data-review-dot={idx} aria-label={`Отзыв ${idx + 1}`}>{idx + 1}</button>)}
+        </div>
+        <div class="review-arrows">
+          <button type="button" id="reviews-prev" aria-label="Предыдущий отзыв"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m15 18-6-6 6-6" /></svg></button>
+          <button type="button" id="reviews-next" aria-label="Следующий отзыв"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6" /></svg></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+  const root = document.getElementById('reviews-carousel');
+  const track = document.getElementById('reviews-track');
+  const slides = Array.from(document.querySelectorAll<HTMLElement>('[data-review-slide]'));
+  const dots = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-review-dot]'));
+  const prevBtn = document.getElementById('reviews-prev');
+  const nextBtn = document.getElementById('reviews-next');
+  if (root && track && slides.length) {
+    root.dataset.ready = 'true';
+    let currentIndex = 0;
+    let touchStartX = 0;
+    const getVisibleCount = () => window.innerWidth >= 768 ? 2 : 1;
+    const getMaxIndex = () => Math.max(0, slides.length - getVisibleCount());
+    const updateUI = () => {
+      const visible = getVisibleCount();
+      currentIndex = Math.min(currentIndex, getMaxIndex());
+      track.style.transform = `translate3d(-${currentIndex * 100 / visible}%, 0, 0)`;
+      slides.forEach((slide, idx) => { slide.inert = idx < currentIndex || idx >= currentIndex + visible; });
+      dots.forEach((dot, idx) => {
+        dot.classList.toggle('hidden', idx > getMaxIndex());
+        dot.setAttribute('aria-current', String(idx === currentIndex));
+      });
+    };
+    const goTo = (index: number) => {
+      currentIndex = index > getMaxIndex() ? 0 : index < 0 ? getMaxIndex() : index;
+      updateUI();
+    };
+    prevBtn?.addEventListener('click', () => goTo(currentIndex - 1));
+    nextBtn?.addEventListener('click', () => goTo(currentIndex + 1));
+    dots.forEach((dot, idx) => dot.addEventListener('click', () => goTo(Math.min(idx, getMaxIndex()))));
+    root.addEventListener('touchstart', (event) => { touchStartX = event.changedTouches[0]?.clientX ?? 0; }, { passive: true });
+    root.addEventListener('touchend', (event) => {
+      const delta = (event.changedTouches[0]?.clientX ?? 0) - touchStartX;
+      if (Math.abs(delta) > 40) goTo(delta > 0 ? currentIndex - 1 : currentIndex + 1);
+    }, { passive: true });
+    root.querySelectorAll<HTMLButtonElement>('[data-review-expand]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const quote = btn.closest('article')?.querySelector<HTMLElement>('[data-review-quote]');
+        if (!quote) return;
+        const expanded = btn.getAttribute('aria-expanded') !== 'true';
+        quote.textContent = expanded ? quote.dataset.full || '' : quote.dataset.excerpt || '';
+        btn.setAttribute('aria-expanded', String(expanded));
+        btn.textContent = expanded ? 'Свернуть' : 'Читать полностью';
+      });
+    });
+    window.addEventListener('resize', updateUI, { passive: true });
+    updateUI();
+  }
+</script>
+<style>
+  #reviews-track { display: grid; gap: 24px; }
+  .review-slide article { height: 100%; padding: 28px; border: 1px solid var(--hairline); border-radius: 12px; background: var(--surface); }
+  .review-source { display: flex; justify-content: space-between; gap: 16px; color: var(--muted); font-size: 14px; }
+  blockquote { margin-top: 24px; font-size: 20px; line-height: 32px; }
+  blockquote::before { content: "«"; display: block; margin-bottom: 8px; color: var(--accent); font-size: 48px; line-height: 40px; }
+  .review-expand { margin-top: 16px; min-height: 44px; font-size: 14px; }
+  .review-controls { display: none; }
+  [data-ready='true'] .reviews-window { overflow: hidden; }
+  [data-ready='true'] #reviews-track { display: flex; gap: 0; transition: transform 240ms var(--ease); }
+  [data-ready='true'] .review-slide { flex: 0 0 100%; min-width: 0; }
+  [data-ready='true'] .review-controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px; margin-top: 32px; }
+  #reviews-dots { display: flex; flex-wrap: wrap; gap: 4px; }
+  #reviews-dots button { width: 36px; min-height: 44px; border-bottom: 2px solid transparent; color: var(--muted); font-size: 14px; font-variant-numeric: tabular-nums; }
+  #reviews-dots button[aria-current='true'] { color: var(--text); border-color: var(--accent); }
+  #reviews-dots button:hover { color: var(--text); }
+  .review-arrows { display: flex; gap: 8px; margin-left: auto; }
+  .review-arrows button { display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid var(--hairline); border-radius: 8px; transition: background-color 160ms var(--ease); }
+  .review-arrows button:hover { background: var(--raised); }
+  @media (min-width: 768px) {
+    [data-ready='true'] .review-slide { flex-basis: 50%; padding-right: 24px; }
+    blockquote { font-size: 24px; line-height: 36px; }
+  }
+</style>

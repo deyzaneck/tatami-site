@@ -1,0 +1,86 @@
+---
+import '../styles/global.css';
+import { CLUB } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Дзюдо, тайский бокс и стретчинг в Жуковском | Татами',
+  description = 'Спортивный клуб «Татами» в Жуковском на ул. Гагарина, 85. Дзюдо, тайский бокс и стретчинг для детей и взрослых. Запись через Telegram.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="ru" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#121212" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:site_name" content="Татами" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+
+    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
+    <link rel="preload" href={`${import.meta.env.BASE_URL}fonts/ibm-plex-sans-cyrillic-400-normal.woff2`} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={`${import.meta.env.BASE_URL}fonts/ibm-plex-sans-cyrillic-500-normal.woff2`} as="font" type="font/woff2" crossorigin />
+
+    <script type="application/ld+json" set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'SportsActivityLocation',
+      name: CLUB.name,
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: CLUB.streetAddress,
+        addressLocality: CLUB.cityShort,
+        addressRegion: 'Московская область',
+        addressCountry: 'RU',
+      },
+      geo: {
+        '@type': 'GeoCoordinates',
+        latitude: CLUB.mapCoords.lat,
+        longitude: CLUB.mapCoords.lng,
+      },
+      telephone: CLUB.phoneDisplay,
+
+      sameAs: [CLUB.socials.instagram, CLUB.socials.vk, CLUB.socials.telegram],
+    })} />
+  </head>
+  <body class="bg-tatami-bg text-tatami-text antialiased">
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-lg focus:bg-tatami-red focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white"
+    >
+      Перейти к основному содержанию
+    </a>
+
+    <slot />
+
+    <script>
+
+      // Pre-select direction in form when clicking a direction CTA
+      document.querySelectorAll<HTMLElement>('[data-select-direction]').forEach((trigger) => {
+        trigger.addEventListener('click', () => {
+          const targetValue = trigger.getAttribute('data-select-direction');
+          const selectEl = document.getElementById('signup-direction') as HTMLSelectElement | null;
+          if (targetValue && selectEl) {
+            selectEl.value = targetValue;
+            selectEl.dispatchEvent(new Event('change', { bubbles: true }));
+            selectEl.focus();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

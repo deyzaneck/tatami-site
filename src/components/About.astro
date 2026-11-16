@@ -1,0 +1,27 @@
+---
+import { BENEFITS } from '../data/site';
+---
+<section id="about" class="tatami-section">
+  <div class="tatami-container about-layout">
+    <div>
+      <h2 class="tatami-section-title">Место для тренировок<br />Люди, с которыми спокойно</h2>
+      <p class="section-note mt-6">«Татами» на Гагарина, 85 — два зала и группы для разного возраста. Можно прийти ребёнком, начать взрослым или заниматься всей семьёй.</p>
+      <a href="#gallery" class="text-link mt-8 inline-block py-2">Посмотреть клуб</a>
+    </div>
+    <dl class="club-facts">
+      {BENEFITS.map((benefit) => (
+        <div>
+          <dt>{benefit.title}</dt>
+          <dd>{benefit.description}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>
+<style>
+  .about-layout { display: grid; gap: 40px; }
+  .club-facts > div { padding-block: 24px; border-top: 1px solid var(--hairline); }
+  .club-facts dt { font-size: 20px; font-weight: 500; }
+  .club-facts dd { margin-top: 8px; max-width: 48ch; color: var(--secondary); }
+  @media (min-width: 768px) { .about-layout { grid-template-columns: 1fr 1fr; gap: 96px; } }
+</style>
