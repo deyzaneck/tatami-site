@@ -127,9 +127,9 @@ test('Prices, supplied trainers, contacts, and opt-in map behavior match project
     assert.ok(html.includes(price), `Missing confirmed pricing item: ${price}`);
   }
   const pricing = html.match(/<section id="pricing"[\s\S]*?<\/section>/)?.[0] || '';
-  assert.ok(pricing.includes('12 тренировок'), 'Monthly plan must remain available');
+  assert.ok(pricing.includes('3 тренировки в неделю'), 'Weekly monthly plan must remain available');
   assert.ok(pricing.includes('Разовое посещение'), 'Single visit must remain available');
-  assert.ok(!/8 тренировок|2000 ₽|персональн/i.test(pricing), 'Removed offers must not be advertised');
+  assert.ok(!/12 тренировок|8 тренировок|2000 ₽|персональн/i.test(pricing), 'Removed offers must not be advertised');
 
   assert.ok(!html.includes('Александр Тютрин'), 'Removed trainer must not remain on the page');
   const trainersSection = html.match(/<section id="trainers"[\s\S]*?<\/section>/)?.[0] || '';

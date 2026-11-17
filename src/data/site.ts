@@ -221,11 +221,11 @@ export const REVIEWS: Review[] = RAW_REVIEWS.map((review) => ({
 
 export const PRICING_PLANS: PricingPlan[] = [
   {
-    id: 'sub-12',
-    title: '12 тренировок',
+    id: 'sub-3-week',
+    title: '3 тренировки в неделю',
     price: '6000 ₽',
     period: 'в месяц',
-    description: 'Абонемент на 12 групповых тренировок в месяц (3 занятия в неделю).',
+    description: 'Месячный абонемент на 3 групповые тренировки в неделю.',
   },
   {
     id: 'single',
