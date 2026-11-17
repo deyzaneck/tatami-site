@@ -1,50 +1,82 @@
 @font-face {
-  font-family: 'IBM Plex Sans';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('../fonts/ibm-plex-sans-cyrillic-400-normal.woff2') format('woff2');
-  unicode-range: U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;
-}
-@font-face {
-  font-family: 'IBM Plex Sans';
+  font-family: 'Unbounded';
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url('../fonts/ibm-plex-sans-cyrillic-500-normal.woff2') format('woff2');
-  unicode-range: U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;
+  src: url('../fonts/unbounded-cyrillic-500-normal.woff2') format('woff2'), url('../fonts/unbounded-500-normal.ttf') format('truetype');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 @font-face {
-  font-family: 'IBM Plex Sans';
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url('../fonts/ibm-plex-sans-cyrillic-600-normal.woff2') format('woff2');
-  unicode-range: U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;
-}
-@font-face {
-  font-family: 'IBM Plex Sans';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('../fonts/ibm-plex-sans-latin-400-normal.woff2') format('woff2');
-  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
-}
-@font-face {
-  font-family: 'IBM Plex Sans';
+  font-family: 'Unbounded';
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url('../fonts/ibm-plex-sans-latin-500-normal.woff2') format('woff2');
-  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+  src: url('../fonts/unbounded-latin-500-normal.woff2') format('woff2'), url('../fonts/unbounded-500-normal.ttf') format('truetype');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {
-  font-family: 'IBM Plex Sans';
+  font-family: 'Unbounded';
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: url('../fonts/ibm-plex-sans-latin-600-normal.woff2') format('woff2');
-  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+  src: url('../fonts/unbounded-cyrillic-600-normal.woff2') format('woff2'), url('../fonts/unbounded-600-normal.ttf') format('truetype');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Unbounded';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../fonts/unbounded-latin-600-normal.woff2') format('woff2'), url('../fonts/unbounded-600-normal.ttf') format('truetype');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Golos Text';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/golos-text-cyrillic-400-normal.woff2') format('woff2'), url('../fonts/golos-text-400-normal.ttf') format('truetype');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Golos Text';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/golos-text-latin-400-normal.woff2') format('woff2'), url('../fonts/golos-text-400-normal.ttf') format('truetype');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Golos Text';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/golos-text-cyrillic-500-normal.woff2') format('woff2'), url('../fonts/golos-text-500-normal.ttf') format('truetype');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Golos Text';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/golos-text-latin-500-normal.woff2') format('woff2'), url('../fonts/golos-text-500-normal.ttf') format('truetype');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Golos Text';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../fonts/golos-text-cyrillic-600-normal.woff2') format('woff2'), url('../fonts/golos-text-600-normal.ttf') format('truetype');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Golos Text';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../fonts/golos-text-latin-600-normal.woff2') format('woff2'), url('../fonts/golos-text-600-normal.ttf') format('truetype');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 @tailwind base;
@@ -53,13 +85,20 @@
 
 @layer base {
   :root {
-    --page: #121212;
-    --surface: #1b1b1b;
-    --raised: #242424;
-    --text: #e8e3d9;
-    --secondary: #a9a69e;
-    --muted: #98958e;
-    --hairline: rgb(232 227 217 / 10%);
+    --font-sans: 'Golos Text', system-ui, sans-serif;
+    --font-display: 'Unbounded', 'Golos Text', system-ui, sans-serif;
+    --page: #0e0e0f;
+    --bg-deep: #0e0e0f;
+    --bg-elevated: #171615;
+    --bg-footer: #09090a;
+    --surface: #171615;
+    --surface-alt: #1f1e1c;
+    --raised: #282624;
+    --text: #ece7de;
+    --secondary: #b3aea5;
+    --muted: #9b968d;
+    --seam: rgb(232 227 217 / 14%);
+    --hairline: rgb(232 227 217 / 12%);
     --accent: #ba433b;
     --ease: cubic-bezier(0.22, 1, 0.36, 1);
     color-scheme: dark;
@@ -70,9 +109,10 @@
   [id] { scroll-margin-top: 6rem; }
   body {
     margin: 0;
-    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    padding-top: 81px;
+    font-family: var(--font-sans);
     font-size: 16px;
-    line-height: 1.5;
+    line-height: 1.55;
     -webkit-font-smoothing: antialiased;
   }
   h1, h2, h3 { text-wrap: balance; }
@@ -81,36 +121,72 @@
   a, button { touch-action: manipulation; }
   button, a, input, select, textarea { transition-timing-function: var(--ease); }
   :focus-visible { outline: 2px solid var(--text); outline-offset: 4px; }
-  select { background-color: var(--surface); color: var(--text); }
+  select { background-color: var(--bg-deep); color: var(--text); }
   ::selection { background: var(--accent); color: #fff; }
 }
 
 @layer components {
   .tatami-container { width: 100%; max-width: 1248px; margin-inline: auto; padding-left: max(24px, env(safe-area-inset-left)); padding-right: max(24px, env(safe-area-inset-right)); }
-  .tatami-section { padding-block: 80px; border-bottom: 1px solid var(--hairline); }
-  .tatami-section-title { font-size: 32px; line-height: 1.15; font-weight: 500; color: var(--text); }
-  .section-header { display: flex; flex-direction: column; gap: 24px; margin-bottom: 32px; }
-  .section-note { max-width: 58ch; color: var(--secondary); font-size: 16px; line-height: 1.5; }
-  .text-link { color: var(--text); text-decoration: underline; text-decoration-color: var(--muted); text-underline-offset: 5px; transition: text-decoration-color 160ms var(--ease); }
-  .text-link:hover { text-decoration-color: var(--text); }
-  .tatami-card { background: var(--surface); border: 1px solid var(--hairline); border-radius: 12px; }
-  .btn-primary, .btn-secondary {
-    display: inline-flex; min-height: 48px; align-items: center; justify-content: center;
-    gap: 8px; border-radius: 8px; padding: 12px 20px; font-size: 15px; font-weight: 500;
-    line-height: 24px; text-align: center; transition: background-color 160ms var(--ease), border-color 160ms var(--ease);
+  .tatami-band-deep { background: var(--bg-deep); }
+  .tatami-band-elevated { background: var(--bg-elevated); }
+  .tatami-section { padding-block: 56px; border-top: 1px solid var(--seam); box-shadow: inset 0 1px 0 rgb(255 255 255 / 3%); }
+  .tatami-section-title {
+    font-family: var(--font-display);
+    font-size: 26px; line-height: 1.16; letter-spacing: -0.02em; font-weight: 500; color: var(--text);
   }
-  .btn-primary { background: var(--accent); color: #fff; border: 1px solid transparent; }
-  .btn-primary:hover { background: #a63832; }
-  .btn-secondary { background: transparent; border: 1px solid var(--hairline); color: var(--text); }
-  .btn-secondary:hover { background: var(--raised); border-color: var(--muted); }
+  .tatami-section-title::before {
+    content: "";
+    display: block;
+    width: 36px;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--accent);
+    margin-bottom: 16px;
+  }
+  .section-header {
+    display: flex; flex-direction: column; gap: 16px;
+    padding-bottom: 24px; margin-bottom: 32px;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .section-note { max-width: 56ch; color: var(--secondary); font-size: 15px; line-height: 1.55; }
+  .tatami-card { background: var(--surface); border: 1px solid var(--hairline); border-radius: 12px; }
+  .btn-primary, .btn-secondary, .btn-compact, .btn-header {
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 8px; border-radius: 8px; font-weight: 500; text-align: center; white-space: nowrap;
+    transition: background-color 160ms var(--ease), border-color 160ms var(--ease), color 160ms var(--ease), transform 140ms var(--ease);
+  }
+  .btn-primary, .btn-secondary { min-height: 48px; padding: 12px 20px; font-size: 15px; line-height: 24px; }
+  .btn-compact { min-height: 40px; padding: 8px 16px; font-size: 14px; line-height: 20px; }
+  .btn-header { min-height: 40px; padding: 8px 16px; font-size: 14px; line-height: 20px; }
+  .btn-primary {
+    background: var(--accent); color: #fff; border: 1px solid rgb(255 255 255 / 12%);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 18%);
+  }
+  .btn-primary:hover { background: #a63832; border-color: rgb(255 255 255 / 18%); }
+  .btn-secondary, .btn-compact {
+    background: var(--raised); color: var(--text); border: 1px solid rgb(232 227 217 / 14%);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 8%);
+  }
+  .btn-secondary:hover, .btn-compact:hover { background: #312e2b; border-color: rgb(232 227 217 / 28%); }
+  .btn-header {
+    background: var(--text); color: var(--page); border: 1px solid rgb(255 255 255 / 22%);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 55%);
+  }
+  .btn-header:hover { background: #f5f1e9; border-color: #fff; }
+  .btn-primary:active, .btn-secondary:active, .btn-compact:active, .btn-header:active { transform: scale(0.98); }
+  .btn-icon { flex-shrink: 0; color: var(--secondary); transition: color 160ms var(--ease), transform 160ms var(--ease); }
+  .btn-secondary:hover .btn-icon, .btn-compact:hover .btn-icon { color: var(--text); }
+  .btn-secondary:hover .btn-icon-arrow-right, .btn-compact:hover .btn-icon-arrow-right { transform: translateX(2px); }
+  .btn-secondary:hover .btn-icon-arrow-down, .btn-compact:hover .btn-icon-arrow-down { transform: translateY(2px); }
+  .btn-secondary:hover .btn-icon-arrow-up-right, .btn-compact:hover .btn-icon-arrow-up-right { transform: translate(1.5px, -1.5px); }
 }
 
 @media (min-width: 768px) {
   .tatami-container { padding-left: max(32px, env(safe-area-inset-left)); padding-right: max(32px, env(safe-area-inset-right)); }
-  .tatami-section { padding-block: 112px; }
-  .tatami-section-title { font-size: 40px; }
-  .section-header { flex-direction: row; justify-content: space-between; align-items: baseline; gap: 48px; margin-bottom: 48px; }
-  .section-header .section-note { max-width: 48ch; }
+  .tatami-section { padding-block: 80px; }
+  .tatami-section-title { font-size: 36px; line-height: 1.12; }
+  .section-header { flex-direction: row; justify-content: space-between; align-items: flex-end; gap: 48px; padding-bottom: 28px; margin-bottom: 40px; }
+  .section-header .section-note { max-width: 44ch; font-size: 16px; }
 }
 
 @keyframes hero-enter {

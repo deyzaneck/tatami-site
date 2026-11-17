@@ -15,7 +15,7 @@ const galleryWithFullRes = await Promise.all(
 );
 ---
 
-<section id="gallery" class="tatami-section border-t border-tatami-border">
+<section id="gallery" class="tatami-section tatami-band-deep">
   <div class="tatami-container">
     <div class="section-header">
       <div>
@@ -34,7 +34,7 @@ const galleryWithFullRes = await Promise.all(
             data-full-src={item.fullSrc}
             data-alt={item.alt}
             data-caption={item.caption}
-            class="group block w-full overflow-hidden rounded-xl bg-tatami-card text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tatami-red focus-visible:ring-offset-2 focus-visible:ring-offset-tatami-bg"
+            class="gallery-thumb group block w-full overflow-hidden rounded-xl bg-tatami-surface text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tatami-red focus-visible:ring-offset-2 focus-visible:ring-offset-tatami-bg"
             aria-label={`${item.caption} — открыть фото ${item.index + 1} из ${galleryWithFullRes.length}`}
           >
             <Image
@@ -156,6 +156,7 @@ const galleryWithFullRes = await Promise.all(
 </script>
 
 <style>
+  .gallery-thumb { border: 1px solid var(--hairline); }
   #tatami-lightbox { overscroll-behavior: contain; }
   #lightbox-close { top: max(16px, env(safe-area-inset-top)); right: max(16px, env(safe-area-inset-right)); }
 </style>

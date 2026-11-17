@@ -1,27 +1,62 @@
 ---
 import { BENEFITS } from '../data/site';
+import ActionIcon from './ActionIcon.astro';
 ---
-<section id="about" class="tatami-section">
+<section id="about" class="tatami-section tatami-band-elevated">
   <div class="tatami-container about-layout">
-    <div>
-      <h2 class="tatami-section-title">Место для тренировок<br />Люди, с которыми спокойно</h2>
+    <div class="about-intro">
+      <h2 class="tatami-section-title">Место для тренировок.<br />Люди, с которыми спокойно</h2>
       <p class="section-note mt-6">«Татами» на Гагарина, 85 — два зала и группы для разного возраста. Можно прийти ребёнком, начать взрослым или заниматься всей семьёй.</p>
-      <a href="#gallery" class="text-link mt-8 inline-block py-2">Посмотреть клуб</a>
+      <a href="#gallery" class="btn-secondary mt-8">Посмотреть клуб <ActionIcon kind="arrow-down" /></a>
     </div>
     <dl class="club-facts">
       {BENEFITS.map((benefit) => (
-        <div>
-          <dt>{benefit.title}</dt>
-          <dd>{benefit.description}</dd>
+        <div class="fact-card">
+          <div class="fact-icon" aria-hidden="true">
+            {benefit.icon === 'trophy' && (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22M18 2H6v7a6 6 0 0 0 12 0V2Z" />
+              </svg>
+            )}
+            {benefit.icon === 'mat' && (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="16" rx="2" />
+                <path d="M12 4v16M3 12h18" />
+              </svg>
+            )}
+            {benefit.icon === 'heart' && (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+            )}
+          </div>
+          <div>
+            <dt>{benefit.title}</dt>
+            <dd>{benefit.description}</dd>
+          </div>
         </div>
       ))}
     </dl>
   </div>
 </section>
 <style>
-  .about-layout { display: grid; gap: 40px; }
-  .club-facts > div { padding-block: 24px; border-top: 1px solid var(--hairline); }
-  .club-facts dt { font-size: 20px; font-weight: 500; }
-  .club-facts dd { margin-top: 8px; max-width: 48ch; color: var(--secondary); }
-  @media (min-width: 768px) { .about-layout { grid-template-columns: 1fr 1fr; gap: 96px; } }
+  .about-layout { display: grid; gap: 36px; align-items: start; }
+  .club-facts { display: grid; gap: 16px; }
+  .fact-card {
+    display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: start;
+    padding: 20px 24px;
+    background: var(--surface-alt);
+    border: 1px solid var(--hairline);
+    border-radius: 12px;
+  }
+  .fact-icon {
+    display: grid; place-items: center; width: 40px; height: 40px;
+    background: var(--raised); border: 1px solid var(--hairline); border-radius: 8px;
+    color: var(--text);
+  }
+  .fact-card dt { font-size: 18px; font-weight: 600; line-height: 1.35; color: var(--text); }
+  .fact-card dd { margin-top: 8px; max-width: 48ch; font-size: 15px; line-height: 1.5; color: var(--secondary); }
+  @media (min-width: 768px) { .about-layout { grid-template-columns: 1fr 1.15fr; gap: 64px; } }
 </style>

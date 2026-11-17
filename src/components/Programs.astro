@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import { CLUB, DIRECTIONS } from '../data/site';
+import ActionIcon from './ActionIcon.astro';
 import judoImage from '../assets/direction-judo-generated.webp';
 import muayThaiImage from '../assets/direction-muay-thai-generated.webp';
 import stretchingImage from '../assets/direction-stretching-generated.webp';
@@ -11,7 +12,7 @@ const photos = {
   stretching: { src: stretchingImage, alt: 'Спортсменка выполняет растяжку на татами', caption: 'Иллюстрация направления' },
 };
 ---
-<section id="directions" class="tatami-section">
+<section id="directions" class="tatami-section tatami-band-elevated">
   <div class="tatami-container">
     <div class="section-header">
       <h2 class="tatami-section-title">Выберите своё направление</h2>
@@ -30,7 +31,7 @@ const photos = {
               <h3>{direction.title}</h3>
               <p class="direction-subtitle">{direction.subtitle}</p>
               <ul>{direction.highlights.map((highlight) => <li>{highlight}</li>)}</ul>
-              <a href="#signup" data-select-direction={direction.id} class="btn-secondary">Выбрать {direction.title.toLowerCase()}</a>
+              <a href="#signup" data-select-direction={direction.id} class="btn-secondary">Выбрать {direction.title.toLowerCase()} <ActionIcon kind="arrow-right" /></a>
             </div>
           </article>
         );
@@ -41,28 +42,31 @@ const photos = {
         <h3>Не знаете, с чего начать?</h3>
         <p>Расскажите администратору о возрасте, подготовке и целях. Вместе выберем направление, группу и время.</p>
       </div>
-      <a href={CLUB.telegramAdmin} target="_blank" rel="noopener noreferrer" class="text-link">Помочь с выбором в Telegram</a>
+      <a href={CLUB.telegramAdmin} target="_blank" rel="noopener noreferrer" class="btn-secondary">Помочь с выбором в Telegram <ActionIcon kind="arrow-up-right" /></a>
     </div>
   </div>
 </section>
 <style>
   .directions-grid { display: grid; gap: 24px; }
-  .direction-card { min-width: 0; display: flex; flex-direction: column; overflow: hidden; background: var(--surface); border: 1px solid var(--hairline); border-radius: 12px; }
+  .direction-card { min-width: 0; display: flex; flex-direction: column; overflow: hidden; background: var(--surface-alt); border: 1px solid var(--hairline); border-radius: 12px; }
   .direction-image { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; object-position: center 35%; }
   figcaption { padding: 12px 24px 0; color: var(--muted); font-size: 12px; }
   .direction-content { display: flex; flex: 1; flex-direction: column; align-items: start; padding: 20px 24px 24px; }
-  .direction-content h3 { font-size: 28px; line-height: 1.2; font-weight: 500; }
-  .direction-subtitle { margin-top: 8px; color: var(--secondary); font-size: 16px; line-height: 24px; }
-  ul { margin-block: 24px 32px; padding-left: 20px; list-style: disc; color: var(--secondary); }
-  li + li { margin-top: 12px; }
+  .direction-content h3 { font-family: var(--font-display); font-size: 22px; line-height: 1.25; font-weight: 500; letter-spacing: -0.015em; }
+  .direction-subtitle { margin-top: 8px; color: var(--secondary); font-size: 15px; line-height: 22px; }
+  ul { margin-block: 20px 28px; padding-left: 18px; list-style: disc; font-size: 15px; line-height: 1.5; color: var(--secondary); }
+  li + li { margin-top: 10px; }
   .direction-content > a { margin-top: auto; width: 100%; }
-  .schedule-note { display: grid; gap: 24px; margin-top: 32px; padding-top: 32px; border-top: 1px solid var(--hairline); }
-  .schedule-note h3 { font-size: 24px; font-weight: 500; line-height: 32px; }
-  .schedule-note p { max-width: 64ch; margin-top: 8px; color: var(--secondary); }
-  .schedule-note > a { justify-self: start; align-self: center; padding-block: 12px; }
+  .schedule-note {
+    display: grid; gap: 20px; margin-top: 28px; padding: 24px;
+    background: var(--surface-alt); border: 1px solid var(--hairline); border-left: 3px solid var(--accent); border-radius: 12px;
+  }
+  .schedule-note h3 { font-size: 20px; font-weight: 600; line-height: 28px; color: var(--text); }
+  .schedule-note p { max-width: 60ch; margin-top: 6px; font-size: 15px; color: var(--secondary); }
+  .schedule-note > a { justify-self: start; align-self: center; }
   @media (min-width: 640px) { .directions-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (min-width: 1024px) {
     .directions-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .schedule-note { grid-template-columns: 1fr auto; gap: 48px; }
+    .schedule-note { grid-template-columns: 1fr auto; gap: 40px; padding: 24px 28px; }
   }
 </style>

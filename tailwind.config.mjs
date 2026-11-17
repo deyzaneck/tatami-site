@@ -6,14 +6,14 @@ export default {
     extend: {
       colors: {
         tatami: {
-          bg: '#121212', surface: '#1b1b1b', card: '#1b1b1b', border: '#292826',
-          text: '#e8e3d9', secondary: '#a9a69e', muted: '#98958e',
+          bg: '#0e0e0f', surface: '#171615', card: '#1f1e1c', border: '#2a2826',
+          text: '#ece7de', secondary: '#b3aea5', muted: '#9b968d',
           red: '#ba433b', redHover: '#a63832',
         },
       },
       fontFamily: {
-        sans: ['IBM Plex Sans', 'system-ui', 'sans-serif'],
-        display: ['IBM Plex Sans', 'system-ui', 'sans-serif'],
+        sans: ['Golos Text', 'system-ui', 'sans-serif'],
+        display: ['Unbounded', 'Golos Text', 'system-ui', 'sans-serif'],
       },
     },
   },

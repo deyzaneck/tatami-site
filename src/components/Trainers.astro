@@ -1,35 +1,45 @@
 ---
 import { Image } from 'astro:assets';
 import { TRAINERS } from '../data/site';
+import ActionIcon from './ActionIcon.astro';
 ---
-<section id="trainers" class="tatami-section">
+<section id="trainers" class="tatami-section tatami-band-deep">
   <div class="tatami-container">
-    <div class="section-header"><h2 class="tatami-section-title">Тренеры клуба</h2></div>
+    <div class="section-header">
+      <h2 class="tatami-section-title">Тренеры клуба</h2>
+      <p class="section-note">Наставники, которые работают с детьми и взрослыми и отвечают за технику на ковре.</p>
+    </div>
     <div class="trainers-grid">
       {TRAINERS.map((trainer) => (
         <article class="trainer-bio">
           <Image src={trainer.photo} alt={trainer.name} widths={[320, 480, 720]} sizes="(min-width: 1024px) 31vw, (min-width: 640px) 46vw, 100vw" width={720} format="webp" quality={85} loading="lazy" decoding="async" class="trainer-photo" />
-          <div class="trainer-details">
-            <p class="trainer-role">{trainer.role}</p>
-            <h3>{trainer.name}</h3>
-            {trainer.achievements.length > 0 && <ul>{trainer.achievements.map((achievement) => <li>{achievement}</li>)}</ul>}
+          <div class="trainer-card-body">
+            <div class="trainer-details">
+              <p class="trainer-role">{trainer.role}</p>
+              <h3>{trainer.name}</h3>
+              {trainer.achievements.length > 0 && <ul>{trainer.achievements.map((achievement) => <li>{achievement}</li>)}</ul>}
+            </div>
+            <a href="#signup" class="btn-compact trainer-booking">Записаться на пробное <ActionIcon kind="arrow-right" /></a>
           </div>
-          <a href="#signup" class="text-link trainer-booking">Записаться на пробное</a>
         </article>
       ))}
     </div>
   </div>
 </section>
 <style>
-  .trainers-grid { display: grid; gap: 40px 24px; }
-  .trainer-bio { min-width: 0; display: flex; flex-direction: column; align-items: start; }
-  .trainer-photo { display: block; width: 100%; height: auto; aspect-ratio: 2 / 3; object-fit: contain; background: var(--surface); border-radius: 12px; }
-  .trainer-details { padding-top: 24px; }
-  .trainer-role { color: var(--secondary); font-size: 14px; }
-  h3 { margin-top: 8px; font-size: 24px; font-weight: 500; line-height: 1.3; }
-  ul { margin-top: 20px; padding-left: 20px; list-style: disc; color: var(--secondary); }
+  .trainers-grid { display: grid; gap: 24px; }
+  .trainer-bio {
+    min-width: 0; display: flex; flex-direction: column; overflow: hidden;
+    background: var(--surface); border: 1px solid var(--hairline); border-radius: 12px;
+  }
+  .trainer-photo { display: block; width: 100%; height: auto; aspect-ratio: 2 / 3; object-fit: contain; background: var(--surface-alt); }
+  .trainer-card-body { display: flex; flex: 1; flex-direction: column; align-items: start; padding: 24px; }
+  .trainer-details { margin-bottom: 24px; }
+  .trainer-role { color: var(--secondary); font-size: 13px; font-weight: 500; }
+  h3 { margin-top: 8px; font-size: 20px; font-weight: 600; line-height: 1.3; color: var(--text); }
+  ul { margin-top: 16px; padding-left: 18px; list-style: disc; font-size: 15px; line-height: 1.5; color: var(--secondary); }
   li + li { margin-top: 8px; }
-  .trainer-booking { margin-top: auto; padding-top: 24px; padding-bottom: 8px; min-height: 44px; }
+  .trainer-booking { margin-top: auto; }
   @media (min-width: 640px) { .trainers-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  @media (min-width: 1024px) { .trainers-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; } }
+  @media (min-width: 1024px) { .trainers-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 </style>
