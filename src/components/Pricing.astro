@@ -10,14 +10,14 @@ import ActionIcon from './ActionIcon.astro';
       <div class="trial-invitation">
         <h3 class="text-lg font-semibold">Пробное занятие бесплатно</h3>
         <p class="mt-2 text-sm leading-6 text-tatami-secondary">Познакомьтесь с тренером и попробуйте занятие в своей группе, прежде чем выбрать абонемент.</p>
-        <a href="#signup" class="btn-primary mt-6">Записаться на пробное</a>
+        <a href="#signup" data-select-plan="trial" class="btn-primary mt-6">Записаться на пробное</a>
       </div>
     </div>
     <div class="price-list">
       {PRICING_PLANS.map((plan) => (
         <article class="price-row">
           <div><h3>{plan.title}</h3><p>{plan.description}</p></div>
-          <div class="price-amount"><span>{plan.price}</span><small>{plan.period}</small><a href="#signup" class="btn-compact price-select">Выбрать <ActionIcon kind="arrow-right" /></a></div>
+          <div class="price-amount"><span>{plan.price}</span><small>{plan.period}</small><a href="#signup" data-select-plan={plan.id} class="btn-compact price-select">Выбрать <ActionIcon kind="arrow-right" /></a></div>
         </article>
       ))}
     </div>

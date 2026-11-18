@@ -1,0 +1,57 @@
+---
+import { FAQ_ITEMS } from '../data/site';
+import ActionIcon from './ActionIcon.astro';
+---
+<section id="faq" class="tatami-section tatami-band-elevated">
+  <div class="tatami-container">
+    <div class="section-header">
+      <h2 class="tatami-section-title">Частые вопросы</h2>
+      <p class="section-note">Ответы о возрасте, форме для первого занятия и расписании групп.</p>
+    </div>
+    <div class="faq-list">
+      {FAQ_ITEMS.map((item) => (
+        <details class="faq-item">
+          <summary>
+            <span>{item.question}</span>
+            <ActionIcon kind="chevron-down" />
+          </summary>
+          <p>{item.answer}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+<style>
+  .faq-list { display: grid; gap: 12px; }
+  .faq-item {
+    background: var(--surface-alt);
+    border: 1px solid var(--hairline);
+    border-radius: 12px;
+    transition: border-color 160ms var(--ease);
+  }
+  .faq-item[open] { border-color: rgb(232 227 217 / 22%); }
+  .faq-item summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 56px;
+    padding: 18px 24px;
+    font-size: 17px;
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--text);
+    cursor: pointer;
+    list-style: none;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary:hover { color: #fff; }
+  .faq-item[open] :global(.btn-icon) { transform: rotate(180deg); color: var(--text); }
+  .faq-item p {
+    padding: 0 24px 20px;
+    max-width: 72ch;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--secondary);
+  }
+</style>

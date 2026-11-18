@@ -1,14 +1,12 @@
 import { defineConfig } from 'astro/config';
-import tailwind from '@astrojs/tailwind';
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-  site: 'https://deyzaneck.github.io',
-  base: '/tatami-site',
-  integrations: [
-    tailwind({
-      applyBaseStyles: false,
-    }),
-  ],
+  site: process.env.SITE_URL || 'https://deyzaneck.github.io',
+  base: process.env.BASE_PATH ?? '/tatami-site',
+  vite: {
+    plugins: [tailwindcss()],
+  },
   image: {
     service: {
       entrypoint: 'astro/assets/services/sharp',

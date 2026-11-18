@@ -1,8 +1,10 @@
 ---
 import { CLUB, DIRECTIONS } from '../data/site';
 import ActionIcon from './ActionIcon.astro';
+
+const baseUrl = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
 ---
-<section id="contacts" class="tatami-section tatami-band-elevated">
+<section id="contacts" class="tatami-section tatami-band-deep">
   <div class="tatami-container">
     <div class="section-header">
       <h2 class="tatami-section-title">Приходите в «Татами»</h2>
@@ -23,23 +25,53 @@ import ActionIcon from './ActionIcon.astro';
               <button type="button" id="load-map-btn" data-embed-url={CLUB.mapEmbedUrl} class="btn-secondary">Показать на сайте</button>
             </div>
           </div>
+          <div id="map-footer" class="map-footer" hidden>
+            <span>{CLUB.addressShort}</span>
+            <a href={CLUB.mapUrl} target="_blank" rel="noopener noreferrer" class="btn-compact">Открыть Яндекс Карты <ActionIcon kind="arrow-up-right" /></a>
+          </div>
         </div>
       </div>
       <div id="signup" class="signup-panel">
-        <h3 class="text-2xl font-medium">Запись на пробное занятие</h3>
+        <h3 class="text-2xl font-medium">Запись на тренировку</h3>
         <p class="mt-4 text-tatami-secondary">Первое занятие бесплатно. Оставьте имя и номер — подготовим заявку администратору.</p>
         <noscript><p class="mt-6"><a href={CLUB.telegramAdmin} target="_blank" rel="noopener noreferrer" class="btn-primary">Записаться в Telegram</a></p></noscript>
-        <form id="tatami-signup-form" data-telegram={CLUB.telegramAdmin} action={CLUB.telegramAdmin} target="_blank" rel="noopener noreferrer" hidden>
+        <form id="tatami-signup-form" data-telegram={CLUB.telegramAdmin} action={CLUB.telegramAdmin} target="_blank" rel="noopener noreferrer" novalidate hidden>
           <div class="form-fields">
-            <div><label for="signup-direction">Направление</label><select id="signup-direction" name="direction">{DIRECTIONS.map((direction) => <option value={direction.id}>{direction.title}</option>)}</select></div>
-            <div><label for="signup-name">Ваше имя</label><input id="signup-name" name="name" type="text" required minlength="2" maxlength="80" autocomplete="name" /></div>
-            <div><label for="signup-phone">Телефон</label><input id="signup-phone" name="phone" type="tel" required maxlength="30" autocomplete="tel" inputmode="tel" placeholder="+7 (999) 123-45-67" /></div>
+            <div>
+              <label for="signup-direction">Направление</label>
+              <select id="signup-direction" name="direction">{DIRECTIONS.map((direction) => <option value={direction.id}>{direction.title}</option>)}</select>
+            </div>
+            <div>
+              <label for="signup-plan">Формат занятия</label>
+              <select id="signup-plan" name="plan">
+                <option value="trial">Пробное занятие (бесплатно)</option>
+                <option value="sub-3-week">Абонемент на месяц — 6000 ₽</option>
+                <option value="single">Разовое посещение — 1000 ₽</option>
+              </select>
+            </div>
+            <div>
+              <label for="signup-name">Ваше имя</label>
+              <input id="signup-name" name="name" type="text" required minlength="2" maxlength="80" autocomplete="name" />
+            </div>
+            <div>
+              <label for="signup-phone">Телефон</label>
+              <input id="signup-phone" name="phone" type="tel" required maxlength="30" autocomplete="tel" inputmode="tel" placeholder="+7 (999) 123-45-67" />
+            </div>
+          </div>
+          <div class="consent-field">
+            <input type="checkbox" id="signup-consent" name="consent" required />
+            <label for="signup-consent">
+              Согласен(на) с <a href={`${baseUrl}privacy/`}>политикой конфиденциальности</a> на подготовку заявки в Telegram
+            </label>
           </div>
           <button type="submit" class="btn-primary mt-6 w-full">Продолжить в Telegram</button>
           <p class="mt-4 text-sm text-tatami-secondary">Откроется чат администратора с вашей заявкой. Проверьте её и нажмите «Отправить» в Telegram. Группу и время обсудим там.</p>
           <div id="signup-status" role="status" aria-live="polite" class="signup-status" hidden>
             <p id="signup-message"></p>
-            <a id="signup-telegram-link" class="btn-compact mt-3" target="_blank" rel="noopener noreferrer" hidden>Открыть заявку в Telegram <ActionIcon kind="arrow-up-right" /></a>
+            <div class="signup-status-actions">
+              <a id="signup-telegram-link" class="btn-compact" target="_blank" rel="noopener noreferrer" hidden>Открыть заявку в Telegram <ActionIcon kind="arrow-up-right" /></a>
+              <button type="button" id="signup-copy-btn" class="btn-compact" hidden>Скопировать текст заявки</button>
+            </div>
           </div>
         </form>
       </div>
@@ -50,6 +82,7 @@ import ActionIcon from './ActionIcon.astro';
   // Load embedded Yandex Map iframe strictly upon user click
   const loadMapBtn = document.getElementById('load-map-btn') as HTMLButtonElement | null;
   const mapContainer = document.getElementById('map-container');
+  const mapFooter = document.getElementById('map-footer');
   if (loadMapBtn && mapContainer) {
     loadMapBtn.addEventListener('click', () => {
       const embedUrl = loadMapBtn.dataset.embedUrl;
@@ -57,29 +90,80 @@ import ActionIcon from './ActionIcon.astro';
       const iframe = document.createElement('iframe');
       iframe.src = embedUrl;
       iframe.title = 'Расположение спортивного клуба Татами на Яндекс Картах — ул. Гагарина, 85, Жуковский';
-      iframe.className = 'h-[300px] w-full border-0';
+      iframe.className = 'h-[300px] w-full border-0 block';
       iframe.referrerPolicy = 'no-referrer';
       iframe.allowFullscreen = true;
-      mapContainer.className = 'bg-zinc-900';
+      mapContainer.className = 'map-frame-wrap';
       mapContainer.replaceChildren(iframe);
+      if (mapFooter) mapFooter.hidden = false;
     });
   }
 
   const form = document.getElementById('tatami-signup-form') as HTMLFormElement;
   const directionSelect = document.getElementById('signup-direction') as HTMLSelectElement;
+  const planSelect = document.getElementById('signup-plan') as HTMLSelectElement;
   const nameInput = document.getElementById('signup-name') as HTMLInputElement;
   const phoneInput = document.getElementById('signup-phone') as HTMLInputElement;
+  const consentInput = document.getElementById('signup-consent') as HTMLInputElement;
   const statusBox = document.getElementById('signup-status')!;
   const message = document.getElementById('signup-message')!;
   const telegramLink = document.getElementById('signup-telegram-link') as HTMLAnchorElement;
+  const copyBtn = document.getElementById('signup-copy-btn') as HTMLButtonElement;
+
+  let currentDraft = '';
+
+  const clearFieldErrors = () => {
+    [nameInput, phoneInput, consentInput].forEach((field) => {
+      field.removeAttribute('aria-invalid');
+      field.removeAttribute('aria-describedby');
+    });
+  };
 
   const clearStatus = () => {
+    currentDraft = '';
+    clearFieldErrors();
     statusBox.hidden = true;
     telegramLink.hidden = true;
     telegramLink.removeAttribute('href');
+    copyBtn.hidden = true;
+    copyBtn.textContent = 'Скопировать текст заявки';
   };
+
+  document.querySelectorAll<HTMLElement>('[data-select-direction]').forEach((trigger) => {
+    trigger.addEventListener('click', () => {
+      const targetValue = trigger.getAttribute('data-select-direction');
+      if (targetValue && directionSelect) {
+        directionSelect.value = targetValue;
+        directionSelect.dispatchEvent(new Event('change', { bubbles: true }));
+        nameInput?.focus({ preventScroll: true });
+      }
+    });
+  });
+
+  document.querySelectorAll<HTMLElement>('[data-select-plan]').forEach((trigger) => {
+    trigger.addEventListener('click', () => {
+      const targetValue = trigger.getAttribute('data-select-plan');
+      if (targetValue && planSelect) {
+        planSelect.value = targetValue;
+        planSelect.dispatchEvent(new Event('change', { bubbles: true }));
+        nameInput?.focus({ preventScroll: true });
+      }
+    });
+  });
+
   form.addEventListener('input', clearStatus);
   form.addEventListener('change', clearStatus);
+
+  copyBtn.addEventListener('click', async () => {
+    if (!currentDraft) return;
+    try {
+      await navigator.clipboard.writeText(currentDraft);
+      copyBtn.textContent = 'Текст скопирован';
+    } catch {
+      copyBtn.textContent = 'Не удалось скопировать';
+    }
+  });
+
   form.addEventListener('submit', (event) => {
     event.preventDefault();
     clearStatus();
@@ -87,25 +171,41 @@ import ActionIcon from './ActionIcon.astro';
     const phone = phoneInput.value.trim();
     const digits = phone.replace(/\D/g, '');
     if (name.length < 2) {
+      nameInput.setAttribute('aria-invalid', 'true');
+      nameInput.setAttribute('aria-describedby', 'signup-message');
       statusBox.hidden = false;
       message.textContent = 'Укажите имя — не менее двух символов.';
       nameInput.focus();
       return;
     }
-    if (!/^\+?[\d\s()-]+$/.test(phone) || digits.length < 10 || digits.length > 15) {
+    if (!/^[\d\s()+.–-]+$/.test(phone) || digits.length < 10 || digits.length > 15) {
+      phoneInput.setAttribute('aria-invalid', 'true');
+      phoneInput.setAttribute('aria-describedby', 'signup-message');
       statusBox.hidden = false;
       message.textContent = 'Проверьте номер телефона: от 10 до 15 цифр.';
       phoneInput.focus();
       return;
     }
-    const direction = directionSelect.options[directionSelect.selectedIndex].label;
-    const draft = `Здравствуйте! Хочу записаться на пробное занятие.\nНаправление: ${direction}\nИмя: ${name}\nТелефон: ${phone}`;
+    if (!consentInput.checked) {
+      consentInput.setAttribute('aria-invalid', 'true');
+      consentInput.setAttribute('aria-describedby', 'signup-message');
+      statusBox.hidden = false;
+      message.textContent = 'Подтвердите согласие с политикой конфиденциальности.';
+      consentInput.focus();
+      return;
+    }
+    const direction = directionSelect.options[directionSelect.selectedIndex]?.text || '';
+    const plan = planSelect.options[planSelect.selectedIndex]?.text || '';
+    const draft = `Здравствуйте! Хочу записаться в клуб «Татами».\nНаправление: ${direction}\nФормат: ${plan}\nИмя: ${name}\nТелефон: ${phone}`;
     const url = new URL(form.dataset.telegram!);
     url.searchParams.set('text', draft);
+    currentDraft = draft;
     telegramLink.href = url.href;
     telegramLink.hidden = false;
+    copyBtn.hidden = false;
+    copyBtn.textContent = 'Скопировать текст заявки';
     statusBox.hidden = false;
-    message.textContent = 'Заявка подготовлена, но ещё не отправлена. Если чат не открылся, нажмите на ссылку ниже.';
+    message.textContent = 'Заявка подготовлена, но ещё не отправлена. Если чат не открылся, нажмите на ссылку ниже или скопируйте текст.';
     window.open(url.href, '_blank', 'noopener,noreferrer');
   });
   // Keep personal fields unavailable until the handler prevents a native GET submission.
@@ -115,7 +215,7 @@ import ActionIcon from './ActionIcon.astro';
   [hidden] { display: none !important; }
   .contacts-layout { display: grid; gap: 32px; align-items: start; }
   .contact-details {
-    background: var(--surface-alt); border: 1px solid var(--hairline); border-radius: 12px; padding: 0 24px;
+    background: var(--surface); border: 1px solid var(--hairline); border-radius: 12px; padding: 0 24px;
   }
   .contact-details > div { padding-block: 20px; }
   .contact-details > div + div { border-top: 1px solid var(--hairline); }
@@ -123,15 +223,63 @@ import ActionIcon from './ActionIcon.astro';
   .contact-details dd { margin-top: 6px; font-size: 18px; font-weight: 500; }
   .contact-details small { display: block; margin-top: 4px; font-size: 14px; font-weight: 400; color: var(--secondary); }
   .contact-details a:hover { text-decoration: underline; text-underline-offset: 4px; }
-  .map-panel { overflow: hidden; margin-top: 20px; border: 1px solid var(--hairline); border-radius: 12px; }
-  .map-content { min-height: 216px; padding: 24px; background: var(--surface-alt); }
+  .map-panel { overflow: hidden; margin-top: 20px; border: 1px solid var(--hairline); border-radius: 12px; background: var(--surface); }
+  .map-content { min-height: 216px; padding: 24px; background: var(--surface); }
+  .map-frame-wrap { background: var(--surface); }
+  .map-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--surface);
+    border-top: 1px solid var(--hairline);
+    font-size: 14px;
+    color: var(--secondary);
+  }
   .signup-panel {
-    padding: 24px; background: var(--surface-alt); border: 1px solid rgb(232 227 217 / 14%); border-radius: 12px;
+    padding: 24px; background: var(--surface); border: 1px solid rgb(232 227 217 / 14%); border-radius: 12px;
   }
   .form-fields { display: grid; gap: 20px; margin-top: 24px; }
-  label { display: block; font-size: 14px; font-weight: 500; color: var(--text); }
-  input, select { width: 100%; min-height: 48px; margin-top: 8px; padding: 12px; border: 1px solid var(--hairline); border-radius: 8px; background: var(--bg-deep); color: var(--text); font-size: 16px; line-height: 24px; }
-  input::placeholder { color: var(--muted); }
+  .form-fields label { display: block; font-size: 14px; font-weight: 500; color: var(--text); }
+  .form-fields input, .form-fields select {
+    width: 100%; min-height: 48px; margin-top: 8px; padding: 12px;
+    border: 1px solid var(--hairline); border-radius: 8px;
+    background: var(--bg-deep); color: var(--text); font-size: 16px; line-height: 24px;
+  }
+  .form-fields input[aria-invalid='true'] { border-color: var(--accent); }
+  .form-fields input::placeholder { color: var(--muted); }
+  .consent-field {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .consent-field input[type='checkbox'] {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    margin-top: 2px;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+  .consent-field input[type='checkbox'][aria-invalid='true'] {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .consent-field label {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--secondary);
+    cursor: pointer;
+  }
+  .consent-field a {
+    color: var(--text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
   .signup-status { margin-top: 16px; padding: 16px; background: var(--bg-deep); border: 1px solid var(--hairline); border-radius: 8px; font-size: 14px; }
+  .signup-status-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
   @media (min-width: 1024px) { .contacts-layout { grid-template-columns: 1fr 1.05fr; gap: 48px; } .signup-panel { padding: 28px; } }
 </style>

@@ -1,0 +1,80 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import ActionIcon from '../components/ActionIcon.astro';
+import { CLUB } from '../data/site';
+
+const baseUrl = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+---
+
+<BaseLayout
+  title="Страница не найдена | Татами"
+  description="Запрошенная страница не найдена. Перейдите на главную страницу спортивного клуба «Татами» или напишите администратору в Telegram."
+  noindex={true}
+  includeSchema={false}
+>
+  <Navbar />
+  <main id="main-content">
+    <section class="tatami-section tatami-band-deep error-section">
+      <div class="tatami-container">
+        <div class="error-card">
+          <p class="error-code">Ошибка 404</p>
+          <h1 class="tatami-section-title">Страница не найдена</h1>
+          <p class="error-text">
+            Возможно, ссылка устарела или в адресе есть опечатка. Вернитесь на главную страницу клуба «Татами» или напишите администратору в Telegram.
+          </p>
+          <div class="error-actions">
+            <a href={baseUrl} class="btn-primary">На главную</a>
+            <a
+              href={CLUB.telegramAdmin}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-secondary"
+            >
+              Написать в Telegram <ActionIcon kind="arrow-up-right" />
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>
+
+<style>
+  .error-section {
+    min-height: calc(100dvh - 81px - 260px);
+    display: flex;
+    align-items: center;
+  }
+  .error-card {
+    max-width: 58ch;
+    padding: 32px;
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: 12px;
+  }
+  .error-code {
+    margin-bottom: 12px;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .error-text {
+    margin-top: 20px;
+    color: var(--secondary);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .error-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 28px;
+  }
+</style>

@@ -1,16 +1,97 @@
 ---
 import '../styles/global.css';
-import { CLUB } from '../data/site';
+import { CLUB, FAQ_ITEMS, PRICING_PLANS, TRAINERS } from '../data/site';
 
 interface Props {
   title?: string;
   description?: string;
+  noindex?: boolean;
+  includeSchema?: boolean;
 }
 
 const {
   title = 'Дзюдо, тайский бокс и стретчинг в Жуковском | Татами',
-  description = 'Спортивный клуб «Татами» в Жуковском на ул. Гагарина, 85. Дзюдо, тайский бокс и стретчинг для детей и взрослых. Запись через Telegram.',
+  description = 'Спортивный клуб «Татами» в Жуковском на ул. Гагарина, 85. Дзюдо, тайский бокс и стретчинг для детей от 6 лет и взрослых. Запись через Telegram.',
+  noindex = false,
+  includeSchema = true,
 } = Astro.props;
+
+const baseUrl = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+
+const ogImageUrl = Astro.site
+  ? new URL(`${baseUrl}og-cover.jpg`, Astro.site).href
+  : `${baseUrl}og-cover.jpg`;
+
+const siteUrl = Astro.site ? new URL(baseUrl, Astro.site).href : undefined;
+
+const schemaGraph = includeSchema
+  ? {
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'SportsActivityLocation',
+          name: CLUB.name,
+          description,
+          ...(siteUrl ? { url: siteUrl } : {}),
+          image: ogImageUrl,
+          hasMap: CLUB.mapUrl,
+          address: {
+            '@type': 'PostalAddress',
+            streetAddress: CLUB.streetAddress,
+            addressLocality: CLUB.cityShort,
+            addressRegion: 'Московская область',
+            addressCountry: 'RU',
+          },
+          geo: {
+            '@type': 'GeoCoordinates',
+            latitude: CLUB.mapCoords.lat,
+            longitude: CLUB.mapCoords.lng,
+          },
+          telephone: CLUB.phoneDisplay,
+          sameAs: [
+            CLUB.socials.instagram,
+            CLUB.socials.vk,
+            CLUB.socials.telegram,
+            CLUB.yandexReviewsUrl,
+          ],
+          employee: TRAINERS.map((trainer) => ({
+            '@type': 'Person',
+            name: trainer.name,
+            jobTitle: trainer.role,
+          })),
+          makesOffer: [
+            {
+              '@type': 'Offer',
+              name: 'Пробное занятие',
+              description: 'Первое пробное занятие по дзюдо, тайскому боксу или стретчингу',
+              price: '0',
+              priceCurrency: 'RUB',
+            },
+            ...PRICING_PLANS.map((plan) => ({
+              '@type': 'Offer',
+              name: plan.title,
+              description: plan.description,
+              price: plan.price.replace(/\D/g, ''),
+              priceCurrency: 'RUB',
+            })),
+          ],
+        },
+        {
+          '@type': 'FAQPage',
+          mainEntity: FAQ_ITEMS.map((item) => ({
+            '@type': 'Question',
+            name: item.question,
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: item.answer,
+            },
+          })),
+        },
+      ],
+    }
+  : null;
 ---
 
 <!doctype html>
@@ -18,45 +99,34 @@ const {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; frame-src https://yandex.ru https://*.yandex.ru; object-src 'none'; base-uri 'self';"
+    />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
     <meta name="theme-color" content="#0e0e0f" />
 
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:locale" content="ru_RU" />
     <meta property="og:site_name" content="Татами" />
-    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
 
+    <link rel="icon" type="image/svg+xml" href={`${baseUrl}favicon.svg`} />
+    <link rel="preload" href={`${baseUrl}fonts/golos-text-cyrillic-400-normal.woff2`} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={`${baseUrl}fonts/golos-text-cyrillic-500-normal.woff2`} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={`${baseUrl}fonts/unbounded-cyrillic-500-normal.woff2`} as="font" type="font/woff2" crossorigin />
 
-    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
-    <link rel="preload" href={`${import.meta.env.BASE_URL}fonts/golos-text-cyrillic-400-normal.woff2`} as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href={`${import.meta.env.BASE_URL}fonts/golos-text-cyrillic-500-normal.woff2`} as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href={`${import.meta.env.BASE_URL}fonts/unbounded-cyrillic-500-normal.woff2`} as="font" type="font/woff2" crossorigin />
-
-    <script type="application/ld+json" set:html={JSON.stringify({
-      '@context': 'https://schema.org',
-      '@type': 'SportsActivityLocation',
-      name: CLUB.name,
-      address: {
-        '@type': 'PostalAddress',
-        streetAddress: CLUB.streetAddress,
-        addressLocality: CLUB.cityShort,
-        addressRegion: 'Московская область',
-        addressCountry: 'RU',
-      },
-      geo: {
-        '@type': 'GeoCoordinates',
-        latitude: CLUB.mapCoords.lat,
-        longitude: CLUB.mapCoords.lng,
-      },
-      telephone: CLUB.phoneDisplay,
-
-      sameAs: [CLUB.socials.instagram, CLUB.socials.vk, CLUB.socials.telegram],
-    })} />
+    {schemaGraph && <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)} />}
   </head>
   <body class="bg-tatami-bg text-tatami-text antialiased">
     <a
@@ -67,21 +137,5 @@ const {
     </a>
 
     <slot />
-
-    <script>
-
-      // Pre-select direction in form when clicking a direction CTA
-      document.querySelectorAll<HTMLElement>('[data-select-direction]').forEach((trigger) => {
-        trigger.addEventListener('click', () => {
-          const targetValue = trigger.getAttribute('data-select-direction');
-          const selectEl = document.getElementById('signup-direction') as HTMLSelectElement | null;
-          if (targetValue && selectEl) {
-            selectEl.value = targetValue;
-            selectEl.dispatchEvent(new Event('change', { bubbles: true }));
-            selectEl.focus();
-          }
-        });
-      });
-    </script>
   </body>
 </html>

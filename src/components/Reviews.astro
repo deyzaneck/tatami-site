@@ -1,12 +1,15 @@
 ---
-import { REVIEWS } from '../data/site';
+import { CLUB, REVIEWS } from '../data/site';
 import ActionIcon from './ActionIcon.astro';
 ---
 <section id="reviews" class="tatami-section tatami-band-elevated">
   <div class="tatami-container">
     <div class="section-header">
-      <h2 class="tatami-section-title">Что говорят<br />гости и родители</h2>
-      <p class="section-note">Отзывы о «Татами» с Яндекс Карт</p>
+      <div>
+        <h2 class="tatami-section-title">Что говорят<br />гости и родители</h2>
+        <p class="section-note mt-4">Отзывы о «Татами» с Яндекс Карт</p>
+      </div>
+      <a href={CLUB.yandexReviewsUrl} target="_blank" rel="noopener noreferrer" class="btn-compact reviews-all-link">Все отзывы на Яндекс Картах <ActionIcon kind="arrow-up-right" /></a>
     </div>
     <div id="reviews-carousel" role="region" aria-roledescription="carousel" aria-label="Отзывы гостей спортивного клуба Татами">
       <div class="reviews-window">
@@ -14,7 +17,7 @@ import ActionIcon from './ActionIcon.astro';
           {REVIEWS.map((review) => (
             <div class="review-slide" data-review-slide>
               <article>
-                <p class="review-source">Яндекс Карты {review.date && <time>{review.date}</time>}</p>
+                <p class="review-source">Яндекс Карты {review.date && <span>{review.date}</span>}</p>
                 <blockquote><p data-review-quote data-excerpt={review.excerpt} data-full={review.text}>{review.excerpt}</p></blockquote>
                 {review.excerpt !== review.text && (
                   <button type="button" data-review-expand aria-expanded="false" class="btn-compact review-expand">
@@ -50,8 +53,19 @@ import ActionIcon from './ActionIcon.astro';
     root.dataset.ready = 'true';
     let currentIndex = 0;
     let touchStartX = 0;
+    let touchStartY = 0;
+    let isMultiTouch = false;
     const getVisibleCount = () => window.innerWidth >= 768 ? 2 : 1;
     const getMaxIndex = () => Math.max(0, slides.length - getVisibleCount());
+    const collapseExpandedQuotes = () => {
+      root.querySelectorAll<HTMLButtonElement>('[data-review-expand][aria-expanded="true"]').forEach((btn) => {
+        const quote = btn.closest('article')?.querySelector<HTMLElement>('[data-review-quote]');
+        if (quote) quote.textContent = quote.dataset.excerpt || '';
+        btn.setAttribute('aria-expanded', 'false');
+        const label = btn.querySelector<HTMLElement>('[data-review-expand-label]');
+        if (label) label.textContent = 'Читать полностью';
+      });
+    };
     const updateUI = () => {
       const visible = getVisibleCount();
       currentIndex = Math.min(currentIndex, getMaxIndex());
@@ -63,16 +77,31 @@ import ActionIcon from './ActionIcon.astro';
       });
     };
     const goTo = (index: number) => {
+      collapseExpandedQuotes();
       currentIndex = index > getMaxIndex() ? 0 : index < 0 ? getMaxIndex() : index;
       updateUI();
     };
     prevBtn?.addEventListener('click', () => goTo(currentIndex - 1));
     nextBtn?.addEventListener('click', () => goTo(currentIndex + 1));
     dots.forEach((dot, idx) => dot.addEventListener('click', () => goTo(Math.min(idx, getMaxIndex()))));
-    root.addEventListener('touchstart', (event) => { touchStartX = event.changedTouches[0]?.clientX ?? 0; }, { passive: true });
+    root.addEventListener('touchstart', (event) => {
+      if (event.touches.length > 1) {
+        isMultiTouch = true;
+        return;
+      }
+      isMultiTouch = false;
+      touchStartX = event.touches[0]?.clientX ?? 0;
+      touchStartY = event.touches[0]?.clientY ?? 0;
+    }, { passive: true });
     root.addEventListener('touchend', (event) => {
-      const delta = (event.changedTouches[0]?.clientX ?? 0) - touchStartX;
-      if (Math.abs(delta) > 40) goTo(delta > 0 ? currentIndex - 1 : currentIndex + 1);
+      if (isMultiTouch || event.touches.length > 0) return;
+      const touch = event.changedTouches[0];
+      if (!touch) return;
+      const deltaX = touch.clientX - touchStartX;
+      const deltaY = touch.clientY - touchStartY;
+      if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
+        goTo(deltaX > 0 ? currentIndex - 1 : currentIndex + 1);
+      }
     }, { passive: true });
     root.querySelectorAll<HTMLButtonElement>('[data-review-expand]').forEach((btn) => {
       btn.addEventListener('click', () => {
@@ -90,11 +119,13 @@ import ActionIcon from './ActionIcon.astro';
   }
 </script>
 <style>
+  .reviews-all-link { align-self: flex-start; }
   #reviews-track { display: grid; gap: 24px; }
   .review-slide article { display: flex; flex-direction: column; align-items: flex-start; height: 100%; padding: 28px; border: 1px solid var(--hairline); border-radius: 12px; background: var(--surface-alt); }
   .review-source { display: flex; width: 100%; justify-content: space-between; gap: 16px; color: var(--muted); font-size: 14px; }
   blockquote { margin-top: 20px; margin-bottom: 20px; font-size: 18px; line-height: 28px; }
   blockquote::before { content: "«"; display: block; margin-bottom: 8px; color: var(--accent); font-family: var(--font-display); font-size: 36px; line-height: 32px; }
+  [data-review-quote] { white-space: pre-line; }
   .review-expand { margin-top: auto; }
   .review-expand[aria-expanded='true'] :global(.btn-icon) { transform: rotate(180deg); color: var(--text); }
   .review-controls { display: none; }
@@ -111,6 +142,7 @@ import ActionIcon from './ActionIcon.astro';
   .review-arrows button:hover { background: #2c2c2a; border-color: rgb(232 227 217 / 28%); }
   .review-arrows button:active { transform: scale(0.98); }
   @media (min-width: 768px) {
+    .reviews-all-link { align-self: flex-end; }
     [data-ready='true'] .review-slide { flex-basis: 50%; padding-right: 24px; }
     blockquote { font-size: 20px; line-height: 30px; }
   }

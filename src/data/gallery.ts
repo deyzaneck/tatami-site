@@ -10,7 +10,6 @@ import photo6 from '../../фотографии_зала/XXXL (6).webp';
 import photo7 from '../../фотографии_зала/XXXL (7).webp';
 import photo8 from '../../фотографии_зала/XXXL (8).webp';
 import photo9 from '../../фотографии_зала/XXXL (9).webp';
-import photo10 from '../../фотографии_зала/XXXL (10).webp';
 
 export interface GalleryPhoto {
   id: string;
@@ -100,14 +99,6 @@ export const GALLERY_PHOTOS: GalleryPhoto[] = [
     alt: 'Дневной вид здания и вывески Спортивный клуб Татами на улице Гагарина в Жуковском',
     caption: 'Вход в клуб со стороны ул. Гагарина, 85',
     category: 'Клуб',
-    objectPosition: 'object-center',
-  },
-  {
-    id: 'photo-11',
-    src: photo10,
-    alt: 'Дружелюбная атмосфера на открытой тренировке детской секции в спортивном клубе Татами',
-    caption: 'Открытая тренировка детской секции на татами',
-    category: 'Тренировки',
     objectPosition: 'object-center',
   },
 ];

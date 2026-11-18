@@ -1,15 +1,19 @@
 ---
-import headerLogo from '../assets/tatami-header-logo.png';
+import headerLogo from '../assets/tatami-header-logo.webp';
 import { CLUB, NAV_ITEMS } from '../data/site';
+
+const baseUrl = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
+const isHome = Astro.url.pathname === baseUrl || Astro.url.pathname === baseUrl.slice(0, -1);
+const navHref = (hash: string) => (isHome ? hash : `${baseUrl}${hash}`);
 ---
 <header class="site-header">
   <div class="tatami-container header-row">
-    <a href="#hero" class="brand-link" aria-label="Татами спортивный клуб — наверх"><img src={headerLogo.src} width={headerLogo.width} height={headerLogo.height} alt="Татами — спортивный клуб" class="header-logo" /></a>
+    <a href={navHref('#hero')} class="brand-link" aria-label="Татами спортивный клуб — наверх"><img src={headerLogo.src} width={headerLogo.width} height={headerLogo.height} alt="Татами — спортивный клуб" class="header-logo" /></a>
     <nav class="desktop-nav" aria-label="Основная навигация">
-      {NAV_ITEMS.map((item) => <a href={item.href}>{item.label}</a>)}
+      {NAV_ITEMS.map((item) => <a href={navHref(item.href)}>{item.label}</a>)}
     </nav>
     <div class="header-actions">
-      <a href="#signup" class="btn-header header-signup">Записаться</a>
+      <a href={navHref('#signup')} class="btn-header header-signup">Записаться</a>
       <button type="button" id="mobile-menu-toggle" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-menu-drawer">
         <svg id="menu-icon-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16" /></svg>
         <svg id="menu-icon-close" class="hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path stroke-linecap="round" d="m6 6 12 12M6 18 18 6" /></svg>
@@ -18,29 +22,44 @@ import { CLUB, NAV_ITEMS } from '../data/site';
   </div>
   <div id="mobile-menu-drawer" class="hidden">
     <div class="tatami-container mobile-nav-content">
-      <nav aria-label="Мобильная навигация">{NAV_ITEMS.map((item) => <a href={item.href} data-mobile-nav-link>{item.label}</a>)}</nav>
+      <nav aria-label="Мобильная навигация">{NAV_ITEMS.map((item) => <a href={navHref(item.href)} data-mobile-nav-link>{item.label}</a>)}</nav>
       <div class="mobile-contact"><a href={CLUB.telegramAdmin} target="_blank" rel="noopener noreferrer">Администратор в Telegram</a><p>{CLUB.addressFull}</p></div>
     </div>
   </div>
 </header>
 <script>
+  const header = document.querySelector<HTMLElement>('.site-header');
   const btn = document.getElementById('mobile-menu-toggle');
   const drawer = document.getElementById('mobile-menu-drawer');
   const iconOpen = document.getElementById('menu-icon-open');
   const iconClose = document.getElementById('menu-icon-close');
   if (btn && drawer) {
-    const setOpen = (isOpen: boolean) => {
-      drawer.classList.toggle('hidden', !isOpen);
-      btn.setAttribute('aria-expanded', String(isOpen));
-      btn.setAttribute('aria-label', isOpen ? 'Закрыть меню' : 'Открыть меню');
-      iconOpen?.classList.toggle('hidden', isOpen);
-      iconClose?.classList.toggle('hidden', !isOpen);
+    const isOpen = () => btn.getAttribute('aria-expanded') === 'true';
+    const setOpen = (open: boolean) => {
+      drawer.classList.toggle('hidden', !open);
+      btn.setAttribute('aria-expanded', String(open));
+      btn.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
+      iconOpen?.classList.toggle('hidden', open);
+      iconClose?.classList.toggle('hidden', !open);
     };
-    btn.addEventListener('click', () => setOpen(btn.getAttribute('aria-expanded') !== 'true'));
+    btn.addEventListener('click', () => setOpen(!isOpen()));
     drawer.querySelectorAll('[data-mobile-nav-link]').forEach((link) => link.addEventListener('click', () => setOpen(false)));
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true') { setOpen(false); btn.focus(); }
+    header?.querySelectorAll('.header-signup, .brand-link').forEach((link) => {
+      link.addEventListener('click', () => {
+        if (isOpen()) setOpen(false);
+      });
     });
+    document.addEventListener('click', (e) => {
+      if (isOpen() && header && e.target instanceof Node && !header.contains(e.target)) {
+        setOpen(false);
+      }
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && isOpen()) { setOpen(false); btn.focus(); }
+    });
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 960 && isOpen()) setOpen(false);
+    }, { passive: true });
   }
 </script>
 <style>
@@ -51,7 +70,7 @@ import { CLUB, NAV_ITEMS } from '../data/site';
   .desktop-nav { display: none; }
   .header-actions { display: flex; align-items: center; gap: 8px; }
   #mobile-menu-toggle {
-    display: grid; place-items: center; width: 40px; height: 40px;
+    display: grid; place-items: center; width: 44px; height: 44px; color: var(--text);
     background: var(--raised); border: 1px solid rgb(232 227 217 / 14%); border-radius: 8px;
     box-shadow: inset 0 1px 0 rgb(255 255 255 / 8%);
     transition: background-color 160ms var(--ease), border-color 160ms var(--ease), transform 140ms var(--ease);
@@ -67,9 +86,9 @@ import { CLUB, NAV_ITEMS } from '../data/site';
   .mobile-nav-content a:hover { color: var(--text); }
   .mobile-contact { padding-top: 16px; margin-top: 16px; border-top: 1px solid var(--hairline); }
   .mobile-contact p { margin-top: 8px; color: var(--secondary); font-size: 14px; }
-  @media (min-width: 1200px) {
-    .desktop-nav { display: flex; gap: 24px; color: var(--secondary); font-size: 14px; }
-    .desktop-nav a { padding-block: 12px; }
+  @media (min-width: 960px) {
+    .desktop-nav { display: flex; gap: clamp(16px, 2vw, 24px); color: var(--secondary); font-size: 14px; }
+    .desktop-nav a { padding-block: 12px; white-space: nowrap; }
     .desktop-nav a:hover { color: var(--text); }
     #mobile-menu-toggle, #mobile-menu-drawer { display: none; }
   }

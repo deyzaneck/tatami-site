@@ -1,0 +1,125 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import ActionIcon from '../components/ActionIcon.astro';
+import { CLUB } from '../data/site';
+
+const baseUrl = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+---
+
+<BaseLayout
+  title="Политика конфиденциальности | Татами"
+  description="Порядок обработки сведений в форме записи на сайте спортивного клуба «Татами» в г. Жуковский."
+  includeSchema={false}
+>
+  <Navbar />
+  <main id="main-content">
+    <section class="tatami-section tatami-band-deep">
+      <div class="tatami-container privacy-wrap">
+        <div class="section-header">
+          <div>
+            <h1 class="tatami-section-title">Политика конфиденциальности</h1>
+          </div>
+          <p class="section-note">
+            Прозрачные правила работы с данными в форме записи на сайте {CLUB.name}.
+          </p>
+        </div>
+
+        <div class="privacy-blocks">
+          <article class="privacy-card">
+            <h2>1. Как работает форма записи на сайте</h2>
+            <p>
+              Этот сайт является статическим и не имеет собственной серверной базы данных. Сведения, которые вы вводите в форму записи (выбранное направление, тариф, имя и номер телефона), обрабатываются только в вашем браузере для формирования текста заявки.
+            </p>
+            <p>
+              На сайте не ведётся автоматическое сохранение, накопление или передача введённых данных на сервер клуба.
+            </p>
+          </article>
+
+          <article class="privacy-card">
+            <h2>2. Передача заявки в Telegram</h2>
+            <p>
+              После нажатия кнопки «Продолжить в Telegram» сайт подготавливает черновик сообщения для чата администратора клуба (<a href={CLUB.telegramAdmin} target="_blank" rel="noopener noreferrer">t.me/tatamiadmin</a>). Вы самостоятельно проверяете текст заявки и решаете, отправлять ли его в Telegram.
+            </p>
+            <p>
+              Дальнейшая переписка и согласование группы происходят непосредственно в мессенджере Telegram по правилам и политике конфиденциальности сервиса Telegram.
+            </p>
+          </article>
+
+          <article class="privacy-card">
+            <h2>3. Сторонние сервисы и карта</h2>
+            <p>
+              На сайте не используются сторонние счётчики аналитики и рекламные трекеры. Встроенная карта Яндекс Карт не загружается автоматически при открытии страницы — виджет подключается только после нажатия кнопки «Показать на сайте».
+            </p>
+          </article>
+
+          <article class="privacy-card">
+            <h2>4. Контакты клуба</h2>
+            <p>{CLUB.name}</p>
+            <p>Адрес: {CLUB.addressFull}</p>
+            <p>Телефон: {CLUB.phoneDisplay}</p>
+            <p>
+              Администратор: <a href={CLUB.telegramAdmin} target="_blank" rel="noopener noreferrer">{CLUB.telegramAdmin}</a>
+            </p>
+          </article>
+        </div>
+
+        <div class="privacy-actions">
+          <a href={`${baseUrl}#signup`} class="btn-primary">Вернуться к записи</a>
+          <a href={baseUrl} class="btn-secondary">На главную</a>
+          <a
+            href={CLUB.telegramAdmin}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-secondary"
+          >
+            Написать в Telegram <ActionIcon kind="arrow-up-right" />
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>
+
+<style>
+  .privacy-wrap {
+    max-width: 920px;
+  }
+  .privacy-blocks {
+    display: grid;
+    gap: 20px;
+  }
+  .privacy-card {
+    padding: 24px;
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: 12px;
+  }
+  .privacy-card h2 {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--text);
+  }
+  .privacy-card p {
+    margin-top: 12px;
+    color: var(--secondary);
+    font-size: 15px;
+    line-height: 1.65;
+  }
+  .privacy-card a {
+    color: var(--text);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .privacy-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 32px;
+  }
+</style>
